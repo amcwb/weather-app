@@ -10,7 +10,9 @@ interface ILocationProps {
 
 export default function Location({ setTitle }: ILocationProps) {
     const { location } = useParams();
-    setTitle(location as string);
+    // Split location for title
+    const title = (location as string).split(",")[0];
+    setTitle(title);
 
     const data = useWeatherData(location as string);
     const temperature = useTemperaturePreference();
