@@ -55,7 +55,7 @@ function App() {
                             <Toolbar>
                                 {
                                     history.location.pathname !== "/" ?
-                                    <Icon className="fa-arrow-left" sx={{marginRight: "1rem"}} onClick={() => history.back()}></Icon>
+                                    <Icon className="fa-arrow-left" sx={{marginRight: "1rem", cursor: "pointer"}} onClick={() => history.back()}></Icon>
                                     : <></>
                                 }
                                 <Typography>

@@ -1,4 +1,4 @@
-import { Card, CardContent, Icon, Typography } from "@mui/material";
+import { Card, CardActionArea, CardActions, CardContent, Icon, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -20,30 +20,31 @@ export default function LocationCard({ location, favourite }: ILocationCardProps
 
     return (
         <>
-            <Card sx={{cursor: "pointer"}} onClick={() => {navigate("/location/" + encodeURIComponent(location))}}>
-                <CardContent sx={{ display: 'flex' }}>
-                    <Typography fontSize="larger" sx={{flex: '1 0 auto'}}>
-                        <Icon
-                            className="fa-star"
-                            sx={{color: favourite ? "gold" : "black", cursor: "pointer"}}
-                            fontSize="small"
-                            onClick={(e) => {
-                                // Stop it from progressing to card click
-                                e.preventDefault();
-                                toggleFavourite(location);
-                            }}
-                        />
-                        {data?.location?.name}
-                    </Typography>
-                    <Box sx={{display: 'flex', flexDirection: 'column', textAlign: "right"}}>
-                        <Typography fontSize="2rem">
-                            {temperature(data?.current?.temp_c, data?.current?.temp_f)}
+            <Card>
+                <CardActionArea onClick={() => {navigate("/location/" + encodeURIComponent(location))}}>
+                    <CardContent sx={{ display: 'flex' }}>
+                        <Typography fontSize="2rem" sx={{flex: '1 0 auto'}}>
+                            {data?.location?.name}
                         </Typography>
-                        <Typography fontSize="smaller">
-                            Feels like {temperature(data?.current?.feelslike_c, data?.current?.feelslike_f)}
-                        </Typography>
-                    </Box>
-                </CardContent>
+                        <Box sx={{display: 'flex', flexDirection: 'column', textAlign: "right"}}>
+                            <Typography fontSize="2rem">
+                                {temperature(data?.current?.temp_c, data?.current?.temp_f)}
+                            </Typography>
+                            <Typography fontSize="smaller">
+                                Feels like {temperature(data?.current?.feelslike_c, data?.current?.feelslike_f)}
+                            </Typography>
+                        </Box>
+                    </CardContent>
+                </CardActionArea>
+                <CardActions>
+                    <IconButton
+                        className="fas fa-star"
+                        sx={{color: favourite ? "gold" : "black", cursor: "pointer"}}
+                        onClick={(e) => {
+                            toggleFavourite(location);
+                        }}
+                    />
+                </CardActions>
             </Card>
         </>
     )

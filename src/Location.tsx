@@ -1,16 +1,8 @@
-import { Avatar, Card, CardContent, Icon, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, Icon, List, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useParams } from "react-router";
 import { useWeatherData } from "./getWeather";
 import { useTemperaturePreference } from "./temperatureContext";
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 
 interface ILocationProps {
     setTitle: (title: string) => any;
@@ -23,12 +15,11 @@ export default function Location({ setTitle }: ILocationProps) {
     const data = useWeatherData(location as string);
     const temperature = useTemperaturePreference();
 
-    console.log(data?.current)
     return (
         <>
             <Card>
                 <CardContent>
-                    <Box sx={{display: 'flex'}}>
+                    <Box sx={{display: 'flex', marginBottom: "1rem"}}>
                         <Box sx={{flex: '1 0 auto'}}>
                             <Typography fontSize="2rem">
                                 {temperature(data?.current.temp_c, data?.current.temp_f)}
@@ -37,54 +28,56 @@ export default function Location({ setTitle }: ILocationProps) {
                                 Feels like {temperature(data?.current.feelslike_c, data?.current.feelslike_f)}
                             </Typography>
                             <Typography>
-                                <Icon className="fa-wind"></Icon> {data?.current?.gust_kph}kph
+                                <Icon className="fa-wind"></Icon> {data?.current?.gust_kph}kph {data?.current?.wind_dir}
                             </Typography>
                             <Typography>
                                 <Icon className="fa-tint"></Icon> {data?.current?.humidity} humidity
                             </Typography>
                         </Box>
-                        <Box sx={{display: 'flex', flexDirection: 'column', textAlign: "right"}}>
+                        <Box sx={{display: 'flex', flexDirection: 'column'}}>
                             <img src={data?.current?.condition?.icon} alt="" />
                         </Box>
                     </Box>
-                    <Box sx={{paddingTop: "1rem"}}>
-                        <TableContainer component={Paper}>
-                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Day</TableCell>
-                                        <TableCell>Description</TableCell>
-                                        <TableCell align="right">Highs</TableCell>
-                                        <TableCell align="right">Lows</TableCell>
-                                        <TableCell align="right">Max gust</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                {
-                                    data?.forecast?.forecastday.slice(0, 10).map(v => (
-                                        <TableRow>
-                                            <TableCell>
-                                                {(new Date(v.date_epoch*1000)).toLocaleDateString()}
-                                            </TableCell>
-                                            <TableCell>
-                                                {v.day.condition.text}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                {temperature(v.day.maxtemp_c, v.day.maxtemp_f)}
-                                            </TableCell>
-                                            <TableCell align="right">
+                    {
+                        data?.forecast?.forecastday.slice(0, 10).map(v => (
+                            <Accordion>
+                                <AccordionSummary>
+                                    <Typography sx={{width: "33%"}}>{(new Date(v.date_epoch*1000)).toLocaleDateString()}</Typography>
+                                    <Typography sx={{color: "text.secondary"}}>{v.day.condition.text}</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Box sx={{display: "flex"}}>
+                                        <Box sx={{width: "33%"}}>
+                                            <img src={v.day.condition.icon} alt="" />
+                                        </Box>
+                                        <Box>
+                                            <Typography fontSize="larger">{temperature(v.day.avgtemp_c, v.day.avgtemp_f)}</Typography>
+                                            <Typography fontSize="smaller">
+                                                <Icon className="fa-temperature-low"></Icon>
                                                 {temperature(v.day.mintemp_c, v.day.mintemp_f)}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                {v.day.maxwind_kph}kph
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                }
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
+                                                <Icon className="fa-temperature-high"></Icon>
+                                                {temperature(v.day.maxtemp_c, v.day.maxtemp_f)}
+                                            </Typography>
+                                            <Typography fontSize="smaller">
+                                                <Icon className="fa-tint"></Icon>
+                                                {v.day.avghumidity} humid
+                                            </Typography>
+                                            <Typography fontSize="smaller">
+                                                <Icon className="fa-cloud-rain"></Icon>
+                                                {v.day.daily_chance_of_rain}%
+                                                <Icon className="fa-snowflake"></Icon>
+                                                {v.day.daily_chance_of_snow}%
+                                            </Typography>
+                                            <Typography fontSize="smaller">
+                                                <Icon className="fa-sun"></Icon>
+                                                {v.day.uv} UV
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                </AccordionDetails>
+                            </Accordion>
+                        ))
+                    }
                 </CardContent>
             </Card>
         </>
