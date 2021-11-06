@@ -8,9 +8,7 @@ export default function ToggleTemp() {
     return (
         <Typography>
             °F
-            <Switch color="secondary" checked={context.prefersCelsius} onChange={(e) => {
-                console.log(context.dispatch(!context.prefersCelsius))
-            }} />
+            <Switch color="secondary" checked={context.prefersCelsius} onChange={(e) => context.dispatch(!context.prefersCelsius)} />
             °C
         </Typography>
     )
