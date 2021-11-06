@@ -1,5 +1,5 @@
-import useLocation from "./locations";
 import LocationCard from "./LocationCard";
+import { useFavouriteLocations, useNonFavouriteLocations } from "./locationsContext";
 
 interface HomepageProps {
     setTitle: (title: string) => any
@@ -7,11 +7,15 @@ interface HomepageProps {
 
 export default function Homepage({setTitle}: HomepageProps) {
     setTitle("Homepage");
-    const [addLocation, removeLocation, getFavouriteLocations, getNonFavouriteLocations] = useLocation();
+    const favouriteLocations = useFavouriteLocations();
+    const nonFavouriteLocations = useNonFavouriteLocations();
     return (
         <>
         {
-            getFavouriteLocations().map(v => <LocationCard location={v.place}></LocationCard>)
+            favouriteLocations.map(v => <LocationCard location={v.place} favourite={v.favourite}></LocationCard>)
+        }
+        {
+            nonFavouriteLocations.map(v => <LocationCard location={v.place} favourite={v.favourite}></LocationCard>)
         }
         </>
     )

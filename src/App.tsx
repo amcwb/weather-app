@@ -8,6 +8,7 @@ import {
     BrowserRouter as Router, Route, Routes
 } from "react-router-dom";
 import Homepage from './Homepage';
+import { LocationProvider } from './locationsContext';
 import { TemperatureProvider } from './temperatureContext';
 
 const theme = createTheme({
@@ -33,32 +34,34 @@ function App() {
     const [title, setTitle] = useState("Weather");
 
     return (
-        <TemperatureProvider value={false}>
-            <ThemeProvider theme={theme}>
-                <Box>
-                    <AppBar position="static">
-                        <Toolbar>
-                            <Typography>
-                                {title}
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
-                </Box>
-                <CssBaseline />
-                <Router>
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={<Homepage setTitle={setTitle}></Homepage>}
-                        />
-                        <Route
-                            path="/:location:"
-                            element={<></>}
-                        />
-                    </Routes>
-                </Router>
-            </ThemeProvider>
-        </TemperatureProvider>
+        <LocationProvider>
+            <TemperatureProvider>
+                <ThemeProvider theme={theme}>
+                    <Box>
+                        <AppBar position="static">
+                            <Toolbar>
+                                <Typography>
+                                    {title}
+                                </Typography>
+                            </Toolbar>
+                        </AppBar>
+                    </Box>
+                    <CssBaseline />
+                    <Router>
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={<Homepage setTitle={setTitle}></Homepage>}
+                            />
+                            <Route
+                                path="/:location:"
+                                element={<></>}
+                            />
+                        </Routes>
+                    </Router>
+                </ThemeProvider>
+            </TemperatureProvider>
+        </LocationProvider>
     );
 }
 

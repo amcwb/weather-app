@@ -5,10 +5,11 @@ import getWeatherForecast, { IWeatherForecastReturnData } from "./getWeather";
 import { useTemperaturePreference } from "./temperatureContext";
 
 interface ILocationCardProps {
-    location: string
+    location: string;
+    favourite: boolean;
 }
 
-export default function LocationCard({ location }: ILocationCardProps) {
+export default function LocationCard({ location, favourite }: ILocationCardProps) {
     const [data, setData] = useState<IWeatherForecastReturnData | null>(null);
     const temperature = useTemperaturePreference();
 
