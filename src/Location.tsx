@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, Icon, List, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, Icon, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useParams } from "react-router";
 import { useWeatherData } from "./getWeather";

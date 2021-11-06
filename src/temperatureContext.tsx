@@ -35,7 +35,7 @@ export function useTemperaturePreference() {
     const context = useContext(TemperatureContext);
 
     return (value_c: number | undefined, value_f: number | undefined) => {
-        if (context) {
+        if (context.prefersCelsius) {
             return `${value_c}°C`;
         } else {
             return `${value_f}°F`;
