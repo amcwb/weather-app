@@ -3,15 +3,16 @@ import { AppBar, CssBaseline, Icon, Toolbar, Typography } from '@mui/material';
 import { deepOrange, orange } from '@mui/material/colors';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box } from "@mui/system";
+import { createBrowserHistory } from "history";
 import { useState } from 'react';
 import {
-    BrowserRouter as Router, Route, Routes, useNavigate, useLocation
+    BrowserRouter as Router, Route, Routes
 } from "react-router-dom";
 import Homepage from './Homepage';
-import { createBrowserHistory } from "history";
-import { LocationProvider } from './locationsContext';
-import { TemperatureProvider } from './temperatureContext';
 import Location from './Location';
+import { LocationProvider } from './locationsContext';
+import New from './New';
+import { TemperatureProvider } from './temperatureContext';
 
 const theme = createTheme({
     palette: {
@@ -69,6 +70,10 @@ function App() {
                             <Route
                                 path="/location/:location"
                                 element={<Location setTitle={setTitle}/>}
+                            />
+                            <Route
+                                path="/new"
+                                element={<New setTitle={setTitle}></New>}
                             />
                             <Route
                                 path="/"

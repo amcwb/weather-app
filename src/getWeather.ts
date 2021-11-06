@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const KEY = process.env.REACT_APP_WEATHER_API_KEY;
 const API_BASE_URI = "http://api.weatherapi.com/v1/";
 const API_FORECAST_BASE_URI = `${API_BASE_URI}forecast.json?key=${KEY}&days=10&q=`
+const API_AUTOCOMPLETE_BASE_URI = `${API_BASE_URI}search.json?key=${KEY}&q=`
 
 // Using top-level cache goes against React design principles, but for this
 // case, it's acceptable.
@@ -12,7 +13,7 @@ const cache: {
 } = {};
 
 
-interface IWeatherForecastOptions {
+interface IWeatherOptions {
     /**
      * Amount of time it takes for requests to expire
      */
@@ -169,7 +170,7 @@ export function useWeatherData(place: string): IWeatherForecastReturnData | null
  * @param options Options on caching
  * @returns Weather forecast data promise
  */
-export default function getWeatherForecast(place: string, options?: IWeatherForecastOptions): Promise<IWeatherForecastReturnData> {
+export default function getWeatherForecast(place: string, options?: IWeatherOptions): Promise<IWeatherForecastReturnData> {
     return new Promise((resolve, reject) => {
         const expiryTime = options?.expireTime ?? 10 * 1000 * 60 // 10 minutes expiry
 
@@ -186,4 +187,57 @@ export default function getWeatherForecast(place: string, options?: IWeatherFore
             }).catch(reject);
         }
     })
+}
+
+interface IWeatherAutocompleteEntry {
+    id: number,
+    name: string,
+    region: string,
+    country: string,
+    lat: number,
+    lon: number,
+    url: string
+}
+type IWeatherAutocompleteResponseData = IWeatherAutocompleteEntry[];
+
+/**
+ * Get forecast data either from cache or direct request for a specific location
+ * @param place Place name
+ * @param options Options on caching
+ * @returns Weather forecast data promise
+ */
+ export function getWeatherAutocomplete(place: string, options?: IWeatherOptions): Promise<IWeatherAutocompleteResponseData> {
+    return new Promise((resolve, reject) => {
+        const expiryTime = options?.expireTime ?? 10 * 1000 * 60 // 10 minutes expiry
+
+        const data = cache[place];
+        if (data && (Date.now() - data.date) < expiryTime) {
+            resolve(data.data);
+        } else {
+            axios.get(API_AUTOCOMPLETE_BASE_URI + encodeURIComponent(place)).then(res => {
+                cache[place] = {
+                    data: res.data,
+                    date: Date.now()
+                };
+                resolve(res.data);
+            }).catch(reject);
+        }
+    })
+}
+
+export function useWeatherAutocomplete(): [IWeatherAutocompleteResponseData | null, React.Dispatch<React.SetStateAction<string>>] {
+    const [place, setPlace] = useState("");
+    const [data, setData] = useState<IWeatherAutocompleteResponseData | null>(null);
+
+    useEffect(() => {
+        const run = async () => {
+            const data = await getWeatherAutocomplete(place);
+
+            setData(data);
+        }
+        
+        run();
+    });
+
+    return [data, setPlace];
 }
