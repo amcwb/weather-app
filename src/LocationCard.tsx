@@ -1,7 +1,9 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Icon, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
-import getWeatherForecast, { IWeatherForecastReturnData } from "./getWeather";
+import { useNavigate } from "react-router";
+import getWeatherForecast, { IWeatherForecastReturnData, useWeatherData } from "./getWeather";
+import { useToggleFavouriteLocation } from "./locationsContext";
 import { useTemperaturePreference } from "./temperatureContext";
 
 interface ILocationCardProps {
@@ -10,23 +12,27 @@ interface ILocationCardProps {
 }
 
 export default function LocationCard({ location, favourite }: ILocationCardProps) {
-    const [data, setData] = useState<IWeatherForecastReturnData | null>(null);
+    const data = useWeatherData(location);
     const temperature = useTemperaturePreference();
+    const toggleFavourite = useToggleFavouriteLocation();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const run = async () => {
-            const data = await getWeatherForecast(location);
-
-            setData(data);
-        }
-        run();
-    }, []);
 
     return (
         <>
-            <Card>
+            <Card sx={{cursor: "pointer"}} onClick={() => {navigate("/location/" + encodeURIComponent(location))}}>
                 <CardContent sx={{ display: 'flex' }}>
                     <Typography fontSize="larger" sx={{flex: '1 0 auto'}}>
+                        <Icon
+                            className="fa-star"
+                            sx={{color: favourite ? "gold" : "black", cursor: "pointer"}}
+                            fontSize="small"
+                            onClick={(e) => {
+                                // Stop it from progressing to card click
+                                e.preventDefault();
+                                toggleFavourite(location);
+                            }}
+                        />
                         {data?.location?.name}
                     </Typography>
                     <Box sx={{display: 'flex', flexDirection: 'column', textAlign: "right"}}>

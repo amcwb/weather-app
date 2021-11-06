@@ -11,6 +11,7 @@ const initialState = JSON.parse(localStorage.getItem("data") as string)?.locatio
 type Action = 
     | { type: "ADD_LOCATION", location: ILocation }
     | { type: "REMOVE_LOCATION", place: string }
+    | { type: "TOGGLE_FAVOURITE", place: string }
 
 // Reduce dispatched events
 const locationReducer: Reducer<ILocation[], Action> = (state: ILocation[], action: Action) => {
@@ -20,6 +21,9 @@ const locationReducer: Reducer<ILocation[], Action> = (state: ILocation[], actio
         
         case "REMOVE_LOCATION":
             return state.filter(v => v.place !== action.place)
+        
+        case "TOGGLE_FAVOURITE":
+            return state.filter(v => (v.place === action.place && (v.favourite = !v.favourite)) || true)
     }
 }
 
@@ -52,19 +56,39 @@ export const LocationProvider: React.FC = ({ children }) => {
 }
 
 // Helper functions
-export function addLocation(context: LocationContext, location: ILocation) {
-    context.dispatch({
-        type: "ADD_LOCATION",
-        location
-    })
+export function useAddLocation() {
+    const context = useContext(LocationContext);
+
+    return (location: ILocation) => {
+        context.dispatch({
+            type: "ADD_LOCATION",
+            location
+        })
+    }
 }
 
-export function removeLocation(context: LocationContext, place: string) {
-    context.dispatch({
-        type: "REMOVE_LOCATION",
-        place
-    });
+export function useRemoveLocation() {
+    const context = useContext(LocationContext);
+
+    return (place: string) => {
+        context.dispatch({
+            type: "REMOVE_LOCATION",
+            place
+        });
+    }
 }
+
+export function useToggleFavouriteLocation() {
+    const context = useContext(LocationContext);
+
+    return (place: string) => {
+        context.dispatch({
+            type: "TOGGLE_FAVOURITE",
+            place
+        });
+    }
+}
+
 
 export function useFavouriteLocations() {
     const context = useContext(LocationContext);

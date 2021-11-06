@@ -1,8 +1,9 @@
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const KEY = process.env.REACT_APP_WEATHER_API_KEY;
 const API_BASE_URI = "http://api.weatherapi.com/v1/";
-const API_FORECAST_BASE_URI = `${API_BASE_URI}forecast.json?key=${KEY}&q=`
+const API_FORECAST_BASE_URI = `${API_BASE_URI}forecast.json?key=${KEY}&days=10&q=`
 
 // Using top-level cache goes against React design principles, but for this
 // case, it's acceptable.
@@ -146,6 +147,22 @@ export interface IWeatherForecastReturnData {
     forecast: Forecast;
 }
 
+export function useWeatherData(place: string): IWeatherForecastReturnData | null {
+    const [data, setData] = useState<IWeatherForecastReturnData | null>(null);
+
+    useEffect(() => {
+        const run = async () => {
+            const data = await getWeatherForecast(place);
+
+            setData(data);
+        }
+        
+        run();
+    });
+
+    return data;
+}
+
 /**
  * Get forecast data either from cache or direct request for a specific location
  * @param place Place name
@@ -158,7 +175,7 @@ export default function getWeatherForecast(place: string, options?: IWeatherFore
 
         const data = cache[place];
         if (data && (Date.now() - data.date) < expiryTime) {
-            return data.data;
+            resolve(data.data);
         } else {
             axios.get(API_FORECAST_BASE_URI + encodeURIComponent(place)).then(res => {
                 cache[place] = {
