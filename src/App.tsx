@@ -4,7 +4,7 @@ import { deepOrange, orange } from '@mui/material/colors';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Box } from "@mui/system";
 import { createBrowserHistory } from "history";
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {
     BrowserRouter as Router, Route, Routes
 } from "react-router-dom";
@@ -13,6 +13,7 @@ import Location from './Location';
 import { LocationProvider } from './locationsContext';
 import New from './New';
 import { TemperatureProvider } from './temperatureContext';
+import ToggleTemp from './ToggleUnit';
 
 const theme = createTheme({
     palette: {
@@ -53,15 +54,16 @@ function App() {
                     <CssBaseline />
                     <Box>
                         <AppBar position="static">
-                            <Toolbar>
+                            <Toolbar sx={{display: "flex"}}>
                                 {
                                     history.location.pathname !== "/" ?
                                     <Icon className="fa-arrow-left" sx={{marginRight: "1rem", cursor: "pointer"}} onClick={() => history.back()}></Icon>
                                     : <></>
                                 }
-                                <Typography>
+                                <Typography sx={{flex: "1 0 auto"}}>
                                     {title}
                                 </Typography>
+                                <ToggleTemp></ToggleTemp>
                             </Toolbar>
                         </AppBar>
                     </Box>
