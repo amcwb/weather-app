@@ -73,7 +73,7 @@ export default function Location({ setTitle }: ILocationProps) {
                 flexDirection: "column",
                 alignItems: "center",
                 padding: "1rem",
-                backgroundColor: date.getHours() == currentHour ? "lightgray" : "initial"
+                backgroundColor: date.getHours() === currentHour ? "lightgray" : "initial"
             }}>
                 <img src={v.condition.icon} alt="" />
                 <Typography fontSize="smaller" color="text.secondary">{date.toLocaleTimeString()}</Typography>
