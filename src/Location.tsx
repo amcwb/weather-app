@@ -15,6 +15,7 @@ export default function Location({ setTitle }: ILocationProps) {
     setTitle(title);
 
     const data = useWeatherData(location as string);
+    const localTime = new Date(data?.location?.localtime as string);
     const temperature = useTemperaturePreference();
 
     // Build
@@ -58,8 +59,10 @@ export default function Location({ setTitle }: ILocationProps) {
     ))
 
     // Days
-    // Get current hour to start
-    const currentHour = new Date().getHours();
+    // Get current hour to start accordion
+    const currentHour = localTime.getHours();
+
+    // Seperate start hour if less than ten entries available
     let startHour = currentHour;
     if (24 - startHour < 10) {
         startHour = 14;
@@ -73,6 +76,7 @@ export default function Location({ setTitle }: ILocationProps) {
                 flexDirection: "column",
                 alignItems: "center",
                 padding: "1rem",
+                // Highlight current hour
                 backgroundColor: date.getHours() === currentHour ? "lightgray" : "initial"
             }}>
                 <img src={v.condition.icon} alt="" />
@@ -89,10 +93,13 @@ export default function Location({ setTitle }: ILocationProps) {
                 <CardContent>
                     <Box sx={{ display: 'flex', marginBottom: "1rem" }}>
                         <Box sx={{ flex: '1 0 auto' }}>
+                            <Typography>
+                                {data?.location?.name}, local time {localTime.toLocaleTimeString()}
+                            </Typography>
                             <Typography fontSize="2rem">
                                 {temperature(data?.current.temp_c, data?.current.temp_f)}
                             </Typography>
-                            <Typography fontSize="smaller">
+                            <Typography fontSize="smaller" color="text.secondary">
                                 Feels like {temperature(data?.current.feelslike_c, data?.current.feelslike_f)}
                             </Typography>
                             <Typography>
@@ -101,12 +108,15 @@ export default function Location({ setTitle }: ILocationProps) {
                             <Typography>
                                 <Icon className="fa-tint"></Icon> {data?.current?.humidity} humidity
                             </Typography>
+                            <Typography>
+                                <Icon className="fa-cloud-rain"></Icon> {data?.current.precip_mm}mm
+                            </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <img src={data?.current?.condition?.icon} alt="" />
                         </Box>
                     </Box>
-                    <Box sx={{ display: "flex", overflow: "scroll", paddingBottom: "1rem" }}>
+                    <Box sx={{ display: "flex", overflow: "auto", paddingBottom: "1rem" }}>
                         {hours}
                     </Box>
                 </CardContent>
