@@ -1,7 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, Icon, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Icon, IconButton, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { useState } from "react";
 import { useParams } from "react-router";
-import { useWeatherData } from "./getWeather";
+import AutocompleteList from "./AutocompleteList";
+import { useWeatherAutocomplete, useWeatherData } from "./getWeather";
+import { useChangeLocation, useLocationData } from "./locationsContext";
 import { useTemperaturePreference } from "./temperatureContext";
 
 interface ILocationProps {
@@ -9,14 +12,19 @@ interface ILocationProps {
 }
 
 export default function Location({ setTitle }: ILocationProps) {
-    const { location } = useParams();
+    const { uuid } = useParams();
+    const location = useLocationData(uuid as string);
+    
     // Split location for title
-    const title = (location as string).split(",")[0];
+    const title = (location?.place as string)?.split(",")[0];
     setTitle(title);
-
-    const data = useWeatherData(location as string);
+    
+    const data = useWeatherData(location?.place as string);
     const localTime = new Date(data?.location?.localtime as string);
     const temperature = useTemperaturePreference();
+    const [editingLocation, setEditingLocation] = useState(false);
+    const [autocomplete, search] = useWeatherAutocomplete();
+    const changeLocation = useChangeLocation();
 
     // Build following days accordion
     const accordionDays = data?.forecast?.forecastday?.slice(0, 10).map(v => (
@@ -97,6 +105,13 @@ export default function Location({ setTitle }: ILocationProps) {
                         <Box sx={{ flex: '1 0 auto' }}>
                             <Typography>
                                 {data?.location?.name}, local time {localTime.toLocaleTimeString()}
+                                <IconButton
+                                    className="fas fa-pen"
+                                    size="small"
+                                    onClick={(e) => {
+                                        setEditingLocation(true);
+                                    }}
+                                />
                             </Typography>
                             <Typography fontSize="2rem">
                                 {temperature(data?.current.temp_c, data?.current.temp_f)}
@@ -124,6 +139,28 @@ export default function Location({ setTitle }: ILocationProps) {
                 </CardContent>
             </Card>
             {accordionDays}
+            <Dialog open={editingLocation}>
+                <DialogTitle>Edit location</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        To edit the location for this entry, type your new location below
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        fullWidth
+                        variant="standard"
+                        onChange={(v) => search(v.target.value)}
+                    />
+                    <AutocompleteList autocomplete={autocomplete?.slice(0, 3)} onSelect={(v) => {
+                        // Add new location
+                        changeLocation(location?.uuid as string, v.name);
+                        setEditingLocation(false);
+                    }}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setEditingLocation(false)}>Cancel</Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 

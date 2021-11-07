@@ -189,7 +189,7 @@ export default function getWeatherForecast(place: string, options?: IWeatherOpti
     })
 }
 
-interface IWeatherAutocompleteEntry {
+export interface IWeatherAutocompleteEntry {
     id: number,
     name: string,
     region: string,
@@ -198,7 +198,7 @@ interface IWeatherAutocompleteEntry {
     lon: number,
     url: string
 }
-type IWeatherAutocompleteResponseData = IWeatherAutocompleteEntry[];
+export type IWeatherAutocompleteResponseData = IWeatherAutocompleteEntry[];
 
 /**
  * Get forecast data either from cache or direct request for a specific location

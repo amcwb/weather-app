@@ -2,6 +2,8 @@ import { Card, CardContent, Icon, List, ListItem, ListItemButton, ListItemIcon, 
 import { useNavigate } from "react-router";
 import { useWeatherAutocomplete } from "./getWeather";
 import { useAddLocation } from "./locationsContext";
+import { v4 } from "uuid";
+import AutocompleteList from "./AutocompleteList";
 
 interface INewProps {
     setTitle: (title: string) => any;
@@ -28,29 +30,16 @@ export default function New({ setTitle }: INewProps) {
                     onChange={(e) => search(e.target.value)}
                 />
 
-                <List>
-                    {
-                        // Provide list of autocomplete
-                        autocomplete?.map(v => 
-                            <ListItem onClick={() => {
-                                // Add new location
-                                addLocation({
-                                    place: v.name,
-                                    favourite: false
-                                });
-                                // Go back to home
-                                navigate("/");
-                            }}>
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <Icon className="fa-map-marker"></Icon>
-                                    </ListItemIcon>
-                                    <ListItemText primary={v.name} secondary={v.region} />
-                                </ListItemButton>
-                            </ListItem>
-                        )
-                    }
-                </List>
+                <AutocompleteList autocomplete={autocomplete} onSelect={(v) => {
+                    // Add new location
+                    addLocation({
+                        uuid: v4(),
+                        place: v.name,
+                        favourite: false
+                    });
+                    // Go back to home
+                    navigate("/");
+                }}/>
             </CardContent>
         </Card>
     )

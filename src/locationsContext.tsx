@@ -1,8 +1,9 @@
 import React, { Context, Reducer, useContext, useEffect, useReducer } from "react";
 
-interface ILocation {
+export interface ILocation {
     place: string,
-    favourite: boolean
+    favourite: boolean,
+    uuid: string
 }
 
 // Grab from local storage
@@ -10,8 +11,9 @@ const initialState = JSON.parse(localStorage.getItem("data") as string)?.locatio
 
 type Action = 
     | { type: "ADD_LOCATION", location: ILocation }
-    | { type: "REMOVE_LOCATION", place: string }
-    | { type: "TOGGLE_FAVOURITE", place: string }
+    | { type: "REMOVE_LOCATION", uuid: string }
+    | { type: "TOGGLE_FAVOURITE", uuid: string }
+    | { type: "CHANGE_LOCATION", uuid: string, place: string }
 
 // Reduce dispatched events
 const locationReducer: Reducer<ILocation[], Action> = (state: ILocation[], action: Action) => {
@@ -20,10 +22,13 @@ const locationReducer: Reducer<ILocation[], Action> = (state: ILocation[], actio
             return state.concat(action.location)
         
         case "REMOVE_LOCATION":
-            return state.filter(v => v.place !== action.place)
+            return state.filter(v => v.uuid !== action.uuid)
         
         case "TOGGLE_FAVOURITE":
-            return state.filter(v => (v.place === action.place && (v.favourite = !v.favourite)) || true)
+            return state.filter(v => (v.uuid === action.uuid && (v.favourite = !v.favourite)) || true)
+        
+        case "CHANGE_LOCATION":
+            return state.filter(v => (v.uuid === action.uuid && (v.place = action.place)) || true)
     }
 }
 
@@ -78,10 +83,10 @@ export function useAddLocation() {
 export function useRemoveLocation() {
     const context = useContext(LocationContext);
 
-    return (place: string) => {
+    return (uuid: string) => {
         context.dispatch({
             type: "REMOVE_LOCATION",
-            place
+            uuid
         });
     }
 }
@@ -93,9 +98,25 @@ export function useRemoveLocation() {
 export function useToggleFavouriteLocation() {
     const context = useContext(LocationContext);
 
-    return (place: string) => {
+    return (uuid: string) => {
         context.dispatch({
             type: "TOGGLE_FAVOURITE",
+            uuid
+        });
+    }
+}
+
+/**
+ * React hook to change location
+ * @returns Hook to change location
+ */
+ export function useChangeLocation() {
+    const context = useContext(LocationContext);
+
+    return (uuid: string, place: string) => {
+        context.dispatch({
+            type: "CHANGE_LOCATION",
+            uuid,
             place
         });
     }
@@ -119,6 +140,17 @@ export function useNonFavouriteLocations() {
     const context = useContext(LocationContext);
 
     return context.locations.filter(v => !v.favourite);
+}
+
+/**
+ * Get location data for UUID
+ * @param uuid UUID of place
+ * @returns Location data
+ */
+export function useLocationData(uuid: string): ILocation | undefined {
+    const context = useContext(LocationContext);
+
+    return context.locations.filter(v => v.uuid === uuid)[0];
 }
 
 // Set default export to context

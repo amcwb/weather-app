@@ -2,16 +2,15 @@ import { Card, CardActionArea, CardActions, CardContent, IconButton, Typography 
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router";
 import { useWeatherData } from "./getWeather";
-import { useRemoveLocation, useToggleFavouriteLocation } from "./locationsContext";
+import { ILocation, useRemoveLocation, useToggleFavouriteLocation } from "./locationsContext";
 import { useTemperaturePreference } from "./temperatureContext";
 
 interface ILocationCardProps {
-    location: string;
-    favourite: boolean;
+    location: ILocation;
 }
 
-export default function LocationCard({ location, favourite }: ILocationCardProps) {
-    const data = useWeatherData(location);
+export default function LocationCard({ location }: ILocationCardProps) {
+    const data = useWeatherData(location.place);
     const temperature = useTemperaturePreference();
     const toggleFavourite = useToggleFavouriteLocation();
     const navigate = useNavigate();
@@ -20,7 +19,7 @@ export default function LocationCard({ location, favourite }: ILocationCardProps
     return (
         <>
             <Card>
-                <CardActionArea onClick={() => {navigate("/location/" + encodeURIComponent(location))}}>
+                <CardActionArea onClick={() => {navigate("/location/" + encodeURIComponent(location.uuid))}}>
                     <CardContent sx={{ display: 'flex' }}>
                         <Box sx={{flex: '1 0 auto'}}>
                             <Typography fontSize="2rem">
@@ -43,16 +42,16 @@ export default function LocationCard({ location, favourite }: ILocationCardProps
                 <CardActions>
                     <IconButton
                         className="fas fa-star"
-                        sx={{color: favourite ? "gold" : "black", cursor: "pointer"}}
+                        sx={{color: location.favourite ? "gold" : "black", cursor: "pointer"}}
                         onClick={(e) => {
-                            toggleFavourite(location);
+                            toggleFavourite(location.uuid);
                         }}
                     />
                     <IconButton
                         className="fas fa-trash"
                         sx={{color: "red", cursor: "pointer"}}
                         onClick={(e) => {
-                            deleteLocation(location);
+                            deleteLocation(location.uuid);
                         }}
                     />
                 </CardActions>

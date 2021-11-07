@@ -70,7 +70,7 @@ function App() {
                     <Router>
                         <Routes>
                             <Route
-                                path="/location/:location"
+                                path="/location/:uuid"
                                 element={<Location setTitle={setTitle}/>}
                             />
                             <Route
