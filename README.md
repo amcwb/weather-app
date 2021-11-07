@@ -30,3 +30,8 @@ npm run start
 ```
 yarn start
 ```
+
+## Contributing
+Please use convential commits. Current versions (as of writing, d7376c215472937ee8571fcfe7125b4382525e5a), use `main` as the development branch.
+
+During final releases this will be replaced.
