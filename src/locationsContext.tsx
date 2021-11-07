@@ -33,14 +33,14 @@ const locationReducer: Reducer<ILocation[], Action> = (state: ILocation[], actio
 }
 
 
-interface LocationContext {
+interface ILocationContext {
     locations: ILocation[];
     dispatch: React.Dispatch<Action>;
 }
 /**
  * Location context
  */
-const LocationContext: Context<LocationContext> = React.createContext({} as LocationContext);
+const LocationContext: Context<ILocationContext> = React.createContext({} as ILocationContext);
 
 
 /**

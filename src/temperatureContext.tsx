@@ -4,14 +4,14 @@ const initialState = JSON.parse(localStorage.getItem("temperaturePreference") as
 const temperatureReducer = (_: any, prefersCelsius: boolean) => { return prefersCelsius  }
 
 
-interface TemperatureContext {
+interface ITemperatureContext {
     prefersCelsius: boolean;
     dispatch: React.Dispatch<boolean>;
 }
 /**
  * Whether the user wants to use celsius
  */
-const TemperatureContext: Context<TemperatureContext> = React.createContext({} as TemperatureContext);
+const TemperatureContext: Context<ITemperatureContext> = React.createContext({} as ITemperatureContext);
 
 
 /**

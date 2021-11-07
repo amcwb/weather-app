@@ -1,9 +1,9 @@
-import { Card, CardContent, Icon, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField, Typography } from "@mui/material"
+import { Card, CardContent, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
-import { useWeatherAutocomplete } from "./getWeather";
-import { useAddLocation } from "./locationsContext";
 import { v4 } from "uuid";
 import AutocompleteList from "./AutocompleteList";
+import { useWeatherAutocomplete } from "./getWeather";
+import { useAddLocation } from "./locationsContext";
 
 interface INewProps {
     setTitle: (title: string) => any;
