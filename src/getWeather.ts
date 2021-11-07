@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const KEY = process.env.REACT_APP_WEATHER_API_KEY;
-const API_BASE_URI = "http://api.weatherapi.com/v1/";
+const API_BASE_URI = "https://api.weatherapi.com/v1/";
 const API_FORECAST_BASE_URI = `${API_BASE_URI}forecast.json?key=${KEY}&days=10&q=`
 const API_AUTOCOMPLETE_BASE_URI = `${API_BASE_URI}search.json?key=${KEY}&q=`
 
