@@ -1,6 +1,6 @@
 import React, { Context, useContext, useEffect, useReducer } from "react";
 
-const initialState = JSON.parse(localStorage.getItem("temperaturePreference") as string) || { prefersCelsius: true }
+const initialState = JSON.parse(localStorage.getItem("temperaturePreference") as string)?.prefersCelsius ?? true;
 const temperatureReducer = (_: any, prefersCelsius: boolean) => { return prefersCelsius  }
 
 
