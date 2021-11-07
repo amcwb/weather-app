@@ -31,6 +31,10 @@ export const TemperatureProvider: React.FC = ({ children }) => {
     )
 }
 
+/**
+ * Use temperature context to provide measurements in preferred units
+ * @returns React hook to get temperature in preferred units
+ */
 export function useTemperaturePreference() {
     const context = useContext(TemperatureContext);
 

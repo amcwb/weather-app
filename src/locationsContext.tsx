@@ -56,6 +56,10 @@ export const LocationProvider: React.FC = ({ children }) => {
 }
 
 // Helper functions
+/**
+ * React hook to add location
+ * @returns Hook to add location
+ */
 export function useAddLocation() {
     const context = useContext(LocationContext);
 
@@ -67,6 +71,10 @@ export function useAddLocation() {
     }
 }
 
+/**
+ * React hook to remove location
+ * @returns Hook to remove location
+ */
 export function useRemoveLocation() {
     const context = useContext(LocationContext);
 
@@ -78,6 +86,10 @@ export function useRemoveLocation() {
     }
 }
 
+/**
+ * React hook to toggle location favourites
+ * @returns Hook to toggle favourite location
+ */
 export function useToggleFavouriteLocation() {
     const context = useContext(LocationContext);
 
@@ -89,13 +101,20 @@ export function useToggleFavouriteLocation() {
     }
 }
 
-
+/**
+ * Get favourite locations from context
+ * @returns Favourite locations
+ */
 export function useFavouriteLocations() {
     const context = useContext(LocationContext);
 
     return context.locations.filter(v => v.favourite);
 }
 
+/**
+ * Get non favourite locations from context
+ * @returns Non favourite locations
+ */
 export function useNonFavouriteLocations() {
     const context = useContext(LocationContext);
 

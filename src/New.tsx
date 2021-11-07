@@ -12,7 +12,7 @@ export default function New({ setTitle }: INewProps) {
     const addLocation = useAddLocation();
     const navigate = useNavigate();
     
-    setTitle("Add location")
+    setTitle("Add location");
     return (
         <Card>
             <CardContent >
@@ -24,17 +24,21 @@ export default function New({ setTitle }: INewProps) {
                     label="Location"
                     variant="standard"
                     fullWidth
+                    // Search from weather autocomplete service
                     onChange={(e) => search(e.target.value)}
                 />
 
                 <List>
                     {
+                        // Provide list of autocomplete
                         autocomplete?.map(v => 
                             <ListItem onClick={() => {
+                                // Add new location
                                 addLocation({
                                     place: v.name,
                                     favourite: false
                                 });
+                                // Go back to home
                                 navigate("/");
                             }}>
                                 <ListItemButton>

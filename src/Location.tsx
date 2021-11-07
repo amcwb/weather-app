@@ -18,8 +18,8 @@ export default function Location({ setTitle }: ILocationProps) {
     const localTime = new Date(data?.location?.localtime as string);
     const temperature = useTemperaturePreference();
 
-    // Build
-    const accordionDays = data?.forecast?.forecastday.slice(0, 10).map(v => (
+    // Build following days accordion
+    const accordionDays = data?.forecast?.forecastday?.slice(0, 10).map(v => (
         <Accordion>
             <AccordionSummary>
                 <Typography sx={{ width: "33%" }}>{(new Date(v.date_epoch * 1000)).toLocaleDateString()}</Typography>
@@ -67,6 +67,8 @@ export default function Location({ setTitle }: ILocationProps) {
     if (24 - startHour < 10) {
         startHour = 14;
     }
+
+    // Create list of elements to add to DOM
     const hours = data?.forecast?.forecastday[0]?.hour.slice(startHour, startHour + 10).map(v => {
         const date = new Date(v.time);
         return (
@@ -120,8 +122,8 @@ export default function Location({ setTitle }: ILocationProps) {
                         {hours}
                     </Box>
                 </CardContent>
-                {accordionDays}
             </Card>
+            {accordionDays}
         </>
     )
 
