@@ -231,6 +231,8 @@ export function useWeatherAutocomplete(): [IWeatherAutocompleteResponseData | nu
 
     useEffect(() => {
         const run = async () => {
+            // Avoid issues with too short queries
+            if (place.length < 3) return;
             const data = await getWeatherAutocomplete(place);
 
             setData(data);

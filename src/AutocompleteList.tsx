@@ -12,7 +12,7 @@ export default function AutocompleteList({ autocomplete, onSelect }: IAutocomple
             {
                 // Provide list of autocomplete
                 autocomplete?.map(v =>
-                    <ListItem onClick={() => onSelect(v)}>
+                    <ListItem onClick={() => onSelect(v)} key={v.id}>
                         <ListItemButton>
                             <ListItemIcon>
                                 <Icon className="fa-map-marker"></Icon>

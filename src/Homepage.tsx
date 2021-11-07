@@ -15,10 +15,10 @@ export default function Homepage({setTitle}: HomepageProps) {
     return (
         <>
         {
-            favouriteLocations.map(v => <LocationCard location={v}></LocationCard>)
+            favouriteLocations.map(v => <LocationCard location={v} key={v.uuid}></LocationCard>)
         }
         {
-            nonFavouriteLocations.map(v => <LocationCard location={v}></LocationCard>)
+            nonFavouriteLocations.map(v => <LocationCard location={v} key={v.uuid}></LocationCard>)
         }
         
             <Fab color="secondary" sx={{position: 'absolute', bottom: 16, right: 16}} onClick={() => {navigate("/new")}}>

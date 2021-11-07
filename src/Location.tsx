@@ -28,7 +28,7 @@ export default function Location({ setTitle }: ILocationProps) {
 
     // Build following days accordion
     const accordionDays = data?.forecast?.forecastday?.slice(0, 10).map(v => (
-        <Accordion>
+        <Accordion key={v.date}>
             <AccordionSummary>
                 <Typography sx={{ width: "33%" }}>{(new Date(v.date_epoch * 1000)).toLocaleDateString()}</Typography>
                 <Typography sx={{ color: "text.secondary" }}>{v.day.condition.text}</Typography>
@@ -80,15 +80,18 @@ export default function Location({ setTitle }: ILocationProps) {
     const hours = data?.forecast?.forecastday[0]?.hour.slice(startHour, startHour + 10).map(v => {
         const date = new Date(v.time);
         return (
-            <Box sx={{
-                display: "flex",
-                flex: "1 0 auto",
-                flexDirection: "column",
-                alignItems: "center",
-                padding: "1rem",
-                // Highlight current hour
-                backgroundColor: date.getHours() === currentHour ? "lightgray" : "initial"
-            }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    flex: "1 0 auto",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    padding: "1rem",
+                    // Highlight current hour
+                    backgroundColor: date.getHours() === currentHour ? "lightgray" : "initial"
+                }}
+                key={v.time}
+            >
                 <img src={v.condition.icon} alt="" />
                 <Typography fontSize="smaller" color="text.secondary">{date.toLocaleTimeString()}</Typography>
                 <Typography>{temperature(v.temp_c, v.temp_f)}</Typography>
